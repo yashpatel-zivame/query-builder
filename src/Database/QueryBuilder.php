@@ -83,7 +83,7 @@ class QueryBuilder
 				extract($whereCond);
 
 				if ($i) {
-					$where .= ' AND';
+					$where .= " {$conjuction}";
 				}
 
 				$where .= " `{$field}` {$operator} '{$value}'";
@@ -143,7 +143,18 @@ class QueryBuilder
 
 	public function where($field, $operator, $value)
 	{
-		$this->wheres[] = compact('field', 'operator', 'value');
+		$conjuction = 'AND';
+
+		$this->wheres[] = compact('field', 'operator', 'value', 'conjuction');
+
+		return $this;
+	}
+
+	public function orWhere($field, $operator, $value)
+	{
+		$conjuction = 'OR';
+
+		$this->wheres[] = compact('field', 'operator', 'value', 'conjuction');
 
 		return $this;
 	}

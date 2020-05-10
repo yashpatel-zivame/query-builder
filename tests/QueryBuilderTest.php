@@ -93,6 +93,18 @@ class DatabaseManageTests extends TestCase
 	}
 
 	/** @test  */
+	public function it_can_apply_or_where_clause()
+	{
+		$sql = (new QueryBuilder)
+			->table('users')
+			->where('name', '=', 'Jhon Doe')
+			->orWhere('email', '=', 'test@database.com')
+			->get();
+
+		$this->assertEquals($sql, "SELECT `*` FROM `users` WHERE `name` = 'Jhon Doe' OR `email` = 'test@database.com'");
+	}
+
+	/** @test  */
 	public function it_can_select_specific_columns_as_well_as_limit_on_it()
 	{
 		$sql = (new QueryBuilder)->table('users')->select('name', 'email')->limit(10)->get();
