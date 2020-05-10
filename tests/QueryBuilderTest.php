@@ -57,6 +57,14 @@ class DatabaseManageTests extends TestCase
 	}
 
 	/** @test  */
+	public function it_can_select_multiple_order_by()
+	{
+		$sql = (new QueryBuilder)->table('users')->orderBy('name')->orderBy('created_at', 'DESC')->get();
+
+		$this->assertEquals($sql, 'SELECT `*` FROM `users` ORDER BY `name`, `created_at` DESC');
+	}
+
+	/** @test  */
 	public function it_can_select_order_by_desc()
 	{
 		$sql = (new QueryBuilder)->table('users')->orderBy('name', 'DESC')->get();
@@ -84,8 +92,9 @@ class DatabaseManageTests extends TestCase
 	public function it_assumes_euqal_comparission_if_not_supplied()
 	{
 		$sql = (new QueryBuilder)->table('users')->where('name', 'Jhon Doe')->get();
+		$sql = (new QueryBuilder)->table('users')->where('name', 'Jhon Doe')->orWhere('name', 'Alexender')->get();
 
-		$this->assertEquals($sql, "SELECT `*` FROM `users` WHERE `name` = 'Jhon Doe'");
+		$this->assertEquals($sql, "SELECT `*` FROM `users` WHERE `name` = 'Jhon Doe' OR `name` = 'Alexender'");
 	}
 
 	/** @test  */
@@ -94,10 +103,10 @@ class DatabaseManageTests extends TestCase
 		$sql = (new QueryBuilder)
 			->table('users')
 			->where('name', '=', 'Jhon Doe')
-			->where('email', '=', 'test@database.com')
+			->where('created_at', '>=', '2019-10-12 10:00:00')
 			->get();
 
-		$this->assertEquals($sql, "SELECT `*` FROM `users` WHERE `name` = 'Jhon Doe' AND `email` = 'test@database.com'");
+		$this->assertEquals($sql, "SELECT `*` FROM `users` WHERE `name` = 'Jhon Doe' AND `created_at` >= '2019-10-12 10:00:00'");
 	}
 
 	/** @test  */

@@ -65,11 +65,19 @@ class QueryBuilder
 		$orderBy = '';
 
 		if ($this->orderBy) {
-			extract($this->orderBy);
+			$orderBy = ' ORDER BY';
 
-			$direction = $direction ? " {$direction}" : '';
+			foreach ($this->orderBy as $i => $orderByClause) {
+				extract($orderByClause);
 
-			$orderBy = " ORDER BY `{$column}`{$direction}";
+				if ($i > 0) {
+					$orderBy .= ',';
+				}
+
+				$direction = $direction ? " {$direction}" : '';
+
+				$orderBy .= " `{$column}`{$direction}";
+			}
 		}
 
 		$columns = implode('`, `', $this->columns);
@@ -140,7 +148,7 @@ class QueryBuilder
 			throw new InvalidArgumentException("Order by caluse supports only ASC & DESC");
 		}
 
-		$this->orderBy = compact('column', 'direction');
+		$this->orderBy[] = compact('column', 'direction');
 
 		return $this;
 	}
