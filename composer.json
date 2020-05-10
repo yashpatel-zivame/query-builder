@@ -1,0 +1,13 @@
+{
+	"autoload": {
+		"psr-4": {
+			"Database\\": "src/Database"
+		},
+		"classmap": [
+			"tests"
+		]
+	},
+	"require": {
+		"phpunit/phpunit": "^9.1"
+	}
+}
