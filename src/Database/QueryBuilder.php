@@ -86,7 +86,11 @@ class QueryBuilder
 					$where .= " {$conjuction}";
 				}
 
-				$where .= " `{$field}` {$operator} '{$value}'";
+				if (is_string($value)) {
+					$value = "'{$value}'";
+				}
+
+				$where .= " `{$field}` {$operator} {$value}";
 			}
 		}
 
