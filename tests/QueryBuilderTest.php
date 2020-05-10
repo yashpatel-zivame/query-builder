@@ -81,6 +81,14 @@ class DatabaseManageTests extends TestCase
 	}
 
 	/** @test  */
+	public function it_assumes_euqal_comparission_if_not_supplied()
+	{
+		$sql = (new QueryBuilder)->table('users')->where('name', 'Jhon Doe')->get();
+
+		$this->assertEquals($sql, "SELECT `*` FROM `users` WHERE `name` = 'Jhon Doe'");
+	}
+
+	/** @test  */
 	public function it_can_apply_multiple_filters()
 	{
 		$sql = (new QueryBuilder)

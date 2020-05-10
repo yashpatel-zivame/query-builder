@@ -136,7 +136,7 @@ class QueryBuilder
 	{
 		$direction = strtoupper($direction);
 
-		if (count(func_get_args()) === 2 && ! in_array($direction, ['ASC', 'DESC'])) {
+		if (func_num_args() === 2 && ! in_array($direction, ['ASC', 'DESC'])) {
 			throw new InvalidArgumentException("Order by caluse supports only ASC & DESC");
 		}
 
@@ -145,18 +145,44 @@ class QueryBuilder
 		return $this;
 	}
 
+	/**
+	 * adds up where condition
+	 *
+	 * @param string $field
+	 * @param string $operator
+	 * @param mixed $value
+	 */
 	public function where(...$params)
 	{
 		return $this->addWhere('AND', ...$params);
 	}
 
+	/**
+	 * adds up and where condition
+	 *
+	 * @param string $field
+	 * @param string $operator
+	 * @param mixed $value
+	 */
 	public function orWhere(...$params)
 	{
 		return $this->addWhere('OR', ...$params);
 	}
 
-	protected function addWhere($conjuction, $field, $operator, $value)
+	/**
+	 * adds up or where condition
+	 *
+	 * @param string $conjuction AND|OR
+	 * @param string $field
+	 * @param string $operator
+	 * @param mixed $value
+	 */
+	protected function addWhere($conjuction, $field, $operator = null, $value = null)
 	{
+		if (func_num_args() === 3) {
+			list($operator, $value) = ['=', $operator];
+		}
+
 		$this->wheres[] = compact('field', 'operator', 'value', 'conjuction');
 
 		return $this;
