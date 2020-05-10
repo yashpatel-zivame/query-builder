@@ -2,9 +2,10 @@
 
 namespace Database;
 
+use Countable;
 use InvalidArgumentException;
 
-class QueryBuilder
+class QueryBuilder implements Countable
 {
 	/**
 	 * name of the table
