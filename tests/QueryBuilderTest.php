@@ -17,6 +17,22 @@ class DatabaseManageTests extends TestCase
 	}
 
 	/** @test  */
+	public function it_can_select_first()
+	{
+		$sql = (new QueryBuilder)->table('users')->first();
+
+		$this->assertEquals($sql, 'SELECT `*` FROM `users` LIMIT 1');
+	}
+
+	/** @test  */
+	public function it_can_count_rows()
+	{
+		$sql = (new QueryBuilder)->table('users')->count();
+
+		$this->assertEquals($sql, 'SELECT count(*) FROM `users`');
+	}
+
+	/** @test  */
 	public function it_can_select_on_specific_columns()
 	{
 		$sql = (new QueryBuilder)->table('users')->select('name', 'email')->get();

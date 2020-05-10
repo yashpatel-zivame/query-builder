@@ -34,7 +34,14 @@ class QueryBuilder
 	 */
 	protected $orderBy = [];
 
+	/**
+	 * where conditions
+	 *
+	 * @var array
+	 */
 	protected $wheres = [];
+
+	protected $countsRow = false;
 
 	/**
 	 * sets table name to perform query
@@ -80,7 +87,17 @@ class QueryBuilder
 			}
 		}
 
-		$columns = implode('`, `', $this->columns);
+		$glue = '`, `';
+
+		if ($this->countsRow) {
+			$glue = ', ';
+		}
+
+		$columns = implode($glue, $this->columns);
+
+		if (! $this->countsRow) {
+			$columns = "`{$columns}`";
+		}
 
 		$where = '';
 
@@ -102,7 +119,30 @@ class QueryBuilder
 			}
 		}
 
-		return "SELECT `{$columns}` FROM `{$this->table}`{$where}{$orderBy}{$limit}";
+		return "SELECT {$columns} FROM `{$this->table}`{$where}{$orderBy}{$limit}";
+	}
+
+	/**
+	 * count number of rows based on
+	 * rest of the query
+	 *
+	 * @return string
+	 */
+	public function count()
+	{
+		$this->countsRow = true;
+
+		return $this->select('count(*)')->get();
+	}
+
+	/**
+	 * helper to limit 1
+	 *
+	 * @return string
+	 */
+	public function first()
+	{
+		return $this->limit(1)->get();
 	}
 
 	/**
