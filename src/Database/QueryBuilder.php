@@ -34,7 +34,7 @@ class QueryBuilder
 	 */
 	protected $orderBy = [];
 
-	protected $where;
+	protected $wheres = [];
 
 	/**
 	 * sets table name to perform query
@@ -74,7 +74,23 @@ class QueryBuilder
 
 		$columns = implode('`, `', $this->columns);
 
-		return "SELECT `{$columns}` FROM `{$this->table}`{$this->where}{$orderBy}{$limit}";
+		$where = '';
+
+		if ($this->wheres) {
+			$where = ' WHERE';
+
+			foreach ($this->wheres as $i => $whereCond) {
+				extract($whereCond);
+
+				if ($i) {
+					$where .= ' AND';
+				}
+
+				$where .= " `{$field}` {$operator} '{$value}'";
+			}
+		}
+
+		return "SELECT `{$columns}` FROM `{$this->table}`{$where}{$orderBy}{$limit}";
 	}
 
 	/**
@@ -127,7 +143,7 @@ class QueryBuilder
 
 	public function where($field, $operator, $value)
 	{
-		$this->where = " WHERE `{$field}` {$operator} '{$value}'";
+		$this->wheres[] = compact('field', 'operator', 'value');
 
 		return $this;
 	}
