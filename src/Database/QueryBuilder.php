@@ -145,19 +145,18 @@ class QueryBuilder
 		return $this;
 	}
 
-	public function where($field, $operator, $value)
+	public function where(...$params)
 	{
-		$conjuction = 'AND';
-
-		$this->wheres[] = compact('field', 'operator', 'value', 'conjuction');
-
-		return $this;
+		return $this->addWhere('AND', ...$params);
 	}
 
-	public function orWhere($field, $operator, $value)
+	public function orWhere(...$params)
 	{
-		$conjuction = 'OR';
+		return $this->addWhere('OR', ...$params);
+	}
 
+	protected function addWhere($conjuction, $field, $operator, $value)
+	{
 		$this->wheres[] = compact('field', 'operator', 'value', 'conjuction');
 
 		return $this;
